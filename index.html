@@ -269,11 +269,7 @@ nav.catnav button[aria-current="true"]{ color:var(--navy); font-weight:500; }
 .card{
   background:var(--panel); border:1px solid var(--line); border-radius:5px; overflow:hidden;
   display:flex; flex-direction:column;
-  content-visibility:auto; contain-intrinsic-size:auto 420px;
   transition:box-shadow .3s var(--ease), transform .3s var(--ease), border-color .3s ease;
-}
-.grid-more{
-  height:1px; margin:8px 0 0; visibility:hidden;
 }
 .card:hover{ box-shadow:0 16px 38px rgba(28,58,94,.12); transform:translateY(-4px); border-color:#DED4C2; }
 .card-media{
@@ -520,7 +516,6 @@ footer{ background:var(--navy-ink); color:#93A2B2; padding:52px 0 30px; font-siz
       </div>
 
       <div class="grid" id="grid"></div>
-      <div class="grid-more" id="gridMore" aria-hidden="true"></div>
 
       <div class="empty-state" id="emptyState">
         <p>No pieces match your search.</p>
@@ -642,25 +637,43 @@ footer{ background:var(--navy-ink); color:#93A2B2; padding:52px 0 30px; font-siz
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.4-1.42a9.87 9.87 0 0 0 4.64 1.18h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2z"/></svg>
 </a>
 
-<script src="js/catalog.js"></script>
 <script>
 const WHATSAPP_NUMBER = "919704073141";
 const MAPS_QUERY = "Srinivasa Gold Works, Ramalayam Street, Indiranagar, Mangalagiri, Guntur District, Andhra Pradesh 522503";
 
-const PAGE_SIZE = 12;
+const BRACELET_NOTE = "Assorted chain-link designs. Mention the design position when you message us.";
+
+const CATALOGUE = [
+  { category:"Bracelets",       id:"b",  folder:"bracelets",        file:"bracelet",       label:"Bracelet Design Sheet",       count:6,  note:BRACELET_NOTE },
+  { category:"Necklaces",       id:"n",  folder:"necklaces",        file:"necklace",       label:"Light-Weight Necklace",       count:17, note:"" },
+  { category:"Stone Necklaces", id:"sn", folder:"stone-necklaces",  file:"stone-necklace", label:"Light-Weight Stone Necklace", count:74, note:"" },
+  { category:"Black Beads",     id:"bb", folder:"black-beads",      file:"black-beads",    label:"Black Beads Design",          count:122,note:"" },
+  { category:"Rings",           id:"r",  folder:"rings",            file:"ring",           label:"Ring Design",                 count:0,  note:"" },
+  { category:"Earrings",        id:"e",  folder:"earrings",         file:"earring",        label:"Earring Design",              count:0,  note:"" },
+];
+
+const pad = n => String(n).padStart(2, '0');
+
+const PRODUCTS = CATALOGUE.flatMap(c =>
+  Array.from({ length:c.count }, (_, i) => ({
+    id:       `${c.id}${i + 1}`,
+    name:     `${c.label} ${pad(i + 1)}`,
+    category: c.category,
+    note:     c.note,
+    image:    `images/${c.folder}/${c.file}-${pad(i + 1)}.jpg`,
+  }))
+);
 
 const categories = CATALOGUE.filter(c => c.count > 0).map(c => c.category);
 const comingSoon = CATALOGUE.filter(c => c.count === 0).map(c => c.category);
 
 let activeCategory = "All";
 let searchTerm = "";
-let visibleLimit = PAGE_SIZE;
 
 const $ = id => document.getElementById(id);
 const navChipsEl   = $('navChips');
 const catTilesEl   = $('catTiles');
 const gridEl       = $('grid');
-const gridMoreEl   = $('gridMore');
 const resultCountEl= $('resultCount');
 const emptyStateEl = $('emptyState');
 const searchEl     = $('search');
@@ -699,21 +712,8 @@ $('pieceCount').textContent = PRODUCTS.length;
   $('marqueeTrack').innerHTML = [...items, ...items].map(t => `<span>${t}</span>`).join('');
 })();
 
-function filteredProducts(){
-  let list = PRODUCTS;
-  if(activeCategory !== "All") list = list.filter(p => p.category === activeCategory);
-  const t = searchTerm.trim().toLowerCase();
-  if(t) list = list.filter(p => [p.name, p.category, p.note].join(' ').toLowerCase().includes(t));
-  return list;
-}
-
-function resetVisible(){
-  visibleLimit = PAGE_SIZE;
-}
-
 function selectCategory(cat, scroll){
   activeCategory = cat;
-  resetVisible();
   renderNav(); renderTiles(); renderGrid();
   if(scroll) $('collection').scrollIntoView({ behavior:'smooth', block:'start' });
 }

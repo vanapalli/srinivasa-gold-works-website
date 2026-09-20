@@ -80,7 +80,7 @@ header.stuck{ border-bottom-color:var(--line); box-shadow:0 6px 26px rgba(28,58,
 }
 .brand{ display:flex; align-items:center; gap:13px; font-size:1.65rem; color:var(--navy); letter-spacing:.01em; }
 .brand img{
-  width:58px; height:58px; flex-shrink:0; border-radius:9px; object-fit:cover;
+  width:82px; height:82px; flex-shrink:0; border-radius:11px; object-fit:cover;
   border:1px solid rgba(184,137,79,.45);
 }
 
@@ -406,7 +406,7 @@ footer{ background:var(--navy-ink); color:#93A2B2; padding:52px 0 30px; font-siz
 .foot-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:36px; }
 .foot-brand{ display:flex; align-items:center; gap:12px; font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:#F4EEE1; }
 .foot-brand img{
-  width:50px; height:50px; border-radius:8px; object-fit:cover;
+  width:64px; height:64px; border-radius:9px; object-fit:cover;
   border:1px solid rgba(228,201,154,.4);
 }
 .foot-tag{ margin-top:12px; max-width:34ch; line-height:1.7; }

@@ -239,7 +239,7 @@ nav.catnav button[aria-current="true"]{ color:var(--navy); font-weight:500; }
   margin-top:34px; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px;
 }
 .cat-tile{
-  position:relative; text-align:left; background:var(--panel);
+  position:relative; text-align:left; background:var(--panel); overflow:hidden;
   border:1px solid var(--line); border-radius:5px; padding:22px 20px 20px;
   transition:border-color .25s ease, box-shadow .25s ease, transform .25s var(--ease);
 }
@@ -252,6 +252,17 @@ nav.catnav button[aria-current="true"]{ color:var(--navy); font-weight:500; }
 }
 .cat-tile.soon{ opacity:.55; cursor:default; }
 .cat-tile.soon:hover{ border-color:var(--line); box-shadow:none; transform:none; }
+.cat-tile.has-cover{ padding:0; display:block; }
+.cat-tile-img{
+  width:100%; aspect-ratio:4/3; object-fit:cover; display:block;
+  transition:transform .5s var(--ease);
+}
+.cat-tile.has-cover:hover .cat-tile-img{ transform:scale(1.06); }
+.cat-tile.has-cover .cat-tile-body{
+  padding:14px 18px 16px; background:var(--panel);
+  border-top:1px solid var(--line);
+}
+.cat-tile.has-cover[aria-current="true"] .cat-tile-body{ background:#FFFDF8; }
 
 .toolbar{
   margin-top:38px; display:flex; justify-content:space-between; align-items:center;
@@ -313,7 +324,17 @@ nav.catnav button[aria-current="true"]{ color:var(--navy); font-weight:500; }
 .card-name{ font-family:'Cormorant Garamond',serif; font-weight:600; font-size:1.34rem; color:var(--ink); line-height:1.22; }
 .card-note{ color:var(--muted); font-size:.78rem; line-height:1.5; }
 .card-price{ color:var(--navy); font-weight:600; font-size:.82rem; margin-top:2px; margin-bottom:12px; }
-.card .btn-wa{ margin-top:auto; justify-content:center; width:100%; }
+.card-actions{ margin-top:auto; display:flex; flex-direction:column; gap:8px; }
+.card-actions .btn-wa, .card-actions .btn-ig{ justify-content:center; width:100%; }
+.btn-ig{
+  display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+  font-size:.83rem; font-weight:600; color:#fff; background:#B23368;
+  padding:11px 19px; border-radius:4px;
+  transition:background .2s ease, transform .2s var(--ease);
+}
+.btn-ig:hover{ background:#962855; transform:translateY(-1px); }
+.btn-ig:active{ transform:translateY(0) scale(.985); }
+.btn-ig svg{ width:15px; height:15px; fill:currentColor; flex-shrink:0; }
 
 .empty-state{ text-align:center; padding:64px 0 24px; color:var(--muted); display:none; }
 .empty-state p:first-child{ font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--navy); }
@@ -727,10 +748,10 @@ const MAPS_QUERY = "Srinivasa Gold Works, Ramalayam Street, Indiranagar, Mangala
 const BRACELET_NOTE = "Assorted chain-link designs. Mention the design position when you message us.";
 
 const CATALOGUE = [
-  { category:"Bracelets",       id:"b",  folder:"bracelets",        file:"bracelet",       label:"Bracelet Design Sheet",       count:6,  note:BRACELET_NOTE },
-  { category:"Necklaces",       id:"n",  folder:"necklaces",        file:"necklace",       label:"Light-Weight Necklace",       count:17, note:"" },
-  { category:"Stone Necklaces", id:"sn", folder:"stone-necklaces",  file:"stone-necklace", label:"Light-Weight Stone Necklace", count:74, note:"" },
-  { category:"Black Beads",     id:"bb", folder:"black-beads",      file:"black-beads",    label:"Black Beads Design",          count:122,note:"" },
+  { category:"Bracelets",       id:"b",  folder:"bracelets",        file:"bracelet",       label:"Bracelet Design Sheet",       count:6,  note:BRACELET_NOTE, cover:"images/covers/bracelets.jpg" },
+  { category:"Necklaces",       id:"n",  folder:"necklaces",        file:"necklace",       label:"Light-Weight Necklace",       count:17, note:"", cover:"images/covers/necklaces.jpg" },
+  { category:"Stone Necklaces", id:"sn", folder:"stone-necklaces",  file:"stone-necklace", label:"Light-Weight Stone Necklace", count:74, note:"", cover:"images/covers/stone-necklaces.jpg" },
+  { category:"Black Beads",     id:"bb", folder:"black-beads",      file:"black-beads",    label:"Black Beads Design",          count:122,note:"", cover:"images/covers/black-beads.jpg" },
   { category:"Rings",           id:"r",  folder:"rings",            file:"ring",           label:"Ring Design",                 count:0,  note:"" },
   { category:"Earrings",        id:"e",  folder:"earrings",         file:"earring",        label:"Earring Design",              count:0,  note:"" },
 ];
@@ -809,15 +830,23 @@ function renderNav(){
 }
 
 function renderTiles(){
-  const live = categories.map(cat => `
-    <button type="button" class="cat-tile" data-cat="${esc(cat)}" aria-current="${cat===activeCategory}">
-      <div class="count">${categoryCount(cat)} pieces</div>
-      <div class="catname">${esc(cat)}</div>
-    </button>`).join('');
+  const live = categories.map(cat => {
+    const cover = CATALOGUE.find(c => c.category === cat)?.cover;
+    return `
+    <button type="button" class="cat-tile${cover ? ' has-cover' : ''}" data-cat="${esc(cat)}" aria-current="${cat===activeCategory}">
+      ${cover ? `<img class="cat-tile-img" src="${esc(cover)}" alt="" loading="lazy">` : ''}
+      <div class="cat-tile-body">
+        <div class="count">${categoryCount(cat)} pieces</div>
+        <div class="catname">${esc(cat)}</div>
+      </div>
+    </button>`;
+  }).join('');
   const soon = comingSoon.map(cat => `
     <div class="cat-tile soon">
-      <div class="count">Coming soon</div>
-      <div class="catname">${esc(cat)}</div>
+      <div class="cat-tile-body">
+        <div class="count">Coming soon</div>
+        <div class="catname">${esc(cat)}</div>
+      </div>
     </div>`).join('');
   catTilesEl.innerHTML = live + soon;
 }
@@ -867,10 +896,16 @@ function renderGrid(){
         <h3 class="card-name">${esc(p.name)}</h3>
         ${p.note ? `<p class="card-note">${esc(p.note)}</p>` : ''}
         <div class="card-price">Price on request</div>
-        <a class="btn-wa" href="${waLink(msg)}" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.4-1.42a9.87 9.87 0 0 0 4.64 1.18h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2z"/></svg>
-          Order on WhatsApp
-        </a>
+        <div class="card-actions">
+          <a class="btn-wa" href="${waLink(msg)}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.4-1.42a9.87 9.87 0 0 0 4.64 1.18h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2z"/></svg>
+            Order on WhatsApp
+          </a>
+          <a class="btn-ig" href="https://www.instagram.com/srinivasagoldworks/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.02-3.58.07-4.85c.15-3.23 1.66-4.77 4.92-4.92 1.27-.06 1.65-.07 4.85-.07zM12 0C8.74 0 8.33.01 7.05.07c-4.35.2-6.78 2.62-6.98 6.98C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c4.35-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.62-6.78-6.98-6.98C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.41-11.85a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/></svg>
+            Chat on Instagram
+          </a>
+        </div>
       </div>
     </article>`;
   }).join('');

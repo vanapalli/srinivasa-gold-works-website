@@ -133,6 +133,15 @@ nav.catnav button[aria-current="true"]{ color:var(--navy); font-weight:500; }
 .btn-wa:active{ transform:translateY(0) scale(.985); }
 .btn-wa svg{ width:15px; height:15px; fill:currentColor; flex-shrink:0; }
 
+.icon-btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:50%; color:var(--navy);
+  border:1px solid rgba(28,58,94,.16); flex-shrink:0;
+  transition:border-color .2s ease, background .2s ease, transform .2s var(--ease);
+}
+.icon-btn:hover{ border-color:var(--gold); background:rgba(184,137,79,.08); transform:translateY(-1px); }
+.icon-btn svg{ width:17px; height:17px; fill:currentColor; }
+
 .hero{
   position:relative; overflow:hidden; color:#F4EEE1;
   background:
@@ -433,6 +442,9 @@ footer{ background:var(--navy-ink); color:#93A2B2; padding:52px 0 30px; font-siz
       Srinivasa Gold Works
     </a>
     <nav class="catnav" id="navChips" aria-label="Filter by category"></nav>
+    <a class="icon-btn" href="https://www.instagram.com/srinivasagoldworks/" target="_blank" rel="noopener" aria-label="Follow Srinivasa Gold Works on Instagram">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.02-3.58.07-4.85c.15-3.23 1.66-4.77 4.92-4.92 1.27-.06 1.65-.07 4.85-.07zM12 0C8.74 0 8.33.01 7.05.07c-4.35.2-6.78 2.62-6.98 6.98C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c4.35-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.62-6.78-6.98-6.98C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.41-11.85a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/></svg>
+    </a>
     <a class="btn-wa" id="headerWa" href="#" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.4-1.42a9.87 9.87 0 0 0 4.64 1.18h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.5 2 12.04 2z"/></svg>
       Chat on WhatsApp
@@ -582,6 +594,7 @@ footer{ background:var(--navy-ink); color:#93A2B2; padding:52px 0 30px; font-siz
             Chat on WhatsApp
           </a>
           <a class="link-gold" id="callLink" href="tel:+919704073141">Call +91 97040 73141</a>
+          <a class="link-gold" href="https://www.instagram.com/srinivasagoldworks/" target="_blank" rel="noopener">Follow on Instagram</a>
         </div>
       </div>
       <div class="address-card reveal" style="--d:120ms">
@@ -615,6 +628,7 @@ footer{ background:var(--navy-ink); color:#93A2B2; padding:52px 0 30px; font-siz
           <li>Ramalayam Street, Indiranagar</li>
           <li>Mangalagiri, Andhra Pradesh 522503</li>
           <li><a href="tel:+919704073141">+91 97040 73141</a></li>
+          <li><a href="https://www.instagram.com/srinivasagoldworks/" target="_blank" rel="noopener">Instagram</a></li>
         </ul>
       </div>
     </div>

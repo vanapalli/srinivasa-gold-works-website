@@ -1,17 +1,9 @@
-/* Overview page: category cards, marquee, hero photo fallback. */
+/* Overview page: category cards and the hero photo fallback. */
 
 (function categoryCards(){
   const el = $('catTiles');
   if(!el) return;
   el.innerHTML = categoryCardsHTML(liveCategories, { includeSoon:true });
-})();
-
-(function buildMarquee(){
-  const track = $('marqueeTrack');
-  if(!track) return;
-  const items = ["22k gold","Handcrafted in Mangalagiri","Light-weight necklaces",
-                 "Chain-link bracelets","Confirmed on WhatsApp"];
-  track.innerHTML = [...items, ...items].map(t => `<span>${t}</span>`).join('');
 })();
 
 (function heroPhoto(){
